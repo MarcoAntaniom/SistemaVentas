@@ -31,12 +31,20 @@ CREATE TABLE estado_venta (
     nombre VARCHAR2(30) NOT NULL
 );
 
+CREATE TABLE tipo_producto (
+    tipo_producto_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
+    nombre VARCHAR2(60) NOT NULL,
+);
+
 CREATE TABLE productos (
-    producto_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
+    codigo NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
     nombre VARCHAR2(50) NOT NULL,
     cantidad NUMBER NOT NULL,
+    tipo_producto_id NUMBER NOT NULL,
     precio_unitario NUMBER(12,2) NOT NULL,
     estado_producto_id NUMBER NOT NULL,
+    imagen_referencial VARCHAR2(500) NOT NULL,
+    CONSTRAINT fk_tipo_producto FOREIGN KEY (tipo_producto_id) REFERENCES tipo_producto(tipo_producto_id)
     CONSTRAINT fk_producto_estado FOREIGN KEY (estado_producto_id) REFERENCES estado_producto(estado_id)
 );
 
@@ -60,7 +68,8 @@ CREATE TABLE ventas (
     documento_id NUMBER NOT NULL,
     total_venta NUMBER(12,2) NULL,
     CONSTRAINT fk_venta_estado FOREIGN KEY (estado_venta_id) REFERENCES estado_venta(estado_id),
-    CONSTRAINT fk_venta_documento FOREIGN KEY (documento_id) REFERENCES documento(documento_id)
+    CONSTRAINT fk_venta_documento FOREIGN KEY (documento_id) REFERENCES documento(documento_id),
+    CONSTRAINT fk_rut_vendedor FOREIGN KEY (rut_vendedor) REFERENCES usuario(RUT)
 );
 
 CREATE TABLE detalle_venta (
