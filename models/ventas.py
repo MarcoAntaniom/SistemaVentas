@@ -24,6 +24,21 @@ class Ventas:
         except Exception as e:
             print(f"Error en la BD: {e}")
         finally:
-            if c: c.cursor.close()
-            if c: c.conexion.close()
-        
+             if c:
+                c.cursor.close()
+                c.conexion.close()
+    
+    def actualizar_total(self, folio, total):
+        try:
+            c = ConexionDB()
+            sql = "UPDATE ventas SET total_venta = :total WHERE folio = :folio"
+            c.cursor.execute(sql, folio=folio, total=total)
+            c.conexion.commit()
+
+        except Exception as e:
+            print(f"Error en la BD: {e}")
+        finally:
+            if c:
+                c.cursor.close()
+                c.conexion.close()
+                
