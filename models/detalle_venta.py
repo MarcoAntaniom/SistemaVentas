@@ -18,5 +18,7 @@ class Detalle_venta:
         except Exception as e:
             print(f"Error en la BD: {e}")
         finally:
-            if c: c.cursor.close()
-            if c: c.conexion.close()
+            if c:
+                c.cursor.close()
+                c.conexion.close()
+

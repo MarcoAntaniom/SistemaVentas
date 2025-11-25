@@ -12,7 +12,7 @@ class Productos:
     def mostrar_productos(self):
         try:
             c = ConexionDB()
-            sql = "SELECT producto_id, nombre, tipo_producto_id FROM productos"
+            sql = "SELECT producto_id, nombre, tipo_producto_id, precio_unitario, cantidad FROM productos"
             c.cursor.execute(sql)
             return c.cursor.fetchall()
         except Exception as e:

@@ -19,3 +19,7 @@ Proyecto de Funciones y Matrices
 - Se agrega el método actualizar_total que actualiza el monto total de una venta al terminarla.
 - Se agrega un método que llama a los productos que hay en la Base de Datos.
 
+### 25 De Noviembre 2025
+#### Marco Milanca
+- Se deja Funcinando parcialmente el insertar_detalle en la interfaz.
+
