@@ -22,4 +22,7 @@ Proyecto de Funciones y Matrices
 ### 25 De Noviembre 2025
 #### Marco Milanca
 - Se deja Funcinando parcialmente el insertar_detalle en la interfaz.
+- Se agrega una nueva tabla, al insertar un producto en la Base de Datos se ve en la tabla detalle.
+- Se agrega una imagen(temporal)
+- al momento de hacer la venta y insertar productos en el detalle, se actualiza el total de la venta, tanto en la interfaz como en la Base de Datos.
 

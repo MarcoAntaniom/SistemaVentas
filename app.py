@@ -7,7 +7,7 @@ class App(tk.Tk):
         super().__init__()
 
         # Configuración de la ventana.
-        self.title("Sistema Gestión de Ventas.")
+        self.title("Sistema Gestión de Ventas")
         self.geometry("800x600")
 
         self.vista_actual = Vista_ventas(self)

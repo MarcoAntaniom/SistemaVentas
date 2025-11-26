@@ -1,4 +1,5 @@
 import tkinter as tk
+import os
 from tkinter import ttk, messagebox, simpledialog
 from models.ventas import Ventas
 from models.detalle_venta import Detalle_venta
@@ -9,6 +10,8 @@ class Vista_ventas(tk.Frame):
         super().__init__(parent)
         self.pack(fill="both", expand=True)
 
+        # Inicializa la variable para almacenar el total de la venta.
+        self.total_venta = 0
         # Llama a la ventana.
         self.ventana_vista()
     
@@ -17,17 +20,68 @@ class Vista_ventas(tk.Frame):
         # Título del panel
         tk.Label(self, text="Ingresar Venta", font=("Arial", 16, "bold")).pack(pady=20)
 
-        # Campos del formulario.
-        tk.Label(self, text="Folio:").pack()
-        self.entrada_folio = tk.Entry(self)
-        self.entrada_folio.pack(pady=5)
+        # Contenedor principal (Contiene todo lo que hay en la pantalla).
+        frame_principal = tk.Frame(self)
+        frame_principal.pack(fill="both", expand=True, padx=20, pady=10)
 
-        tk.Label(self, text="RUT vendedor:").pack()
-        self.entrada_rut = tk.Entry(self)
-        self.entrada_rut.pack(pady=5)
+        # Panel izquierdo (Formulario).
+        panel_izquierdo = tk.Frame(frame_principal, width=300)
+        panel_izquierdo.pack(side="left", fill="y", padx=(0, 20))
 
-        columnas = ("producto_id", "nombre", "tipo_producto_id", "precio_unitario", "cantidad") # Se generan los nombres de las columnas.
-        self.tabla_productos = ttk.Treeview(self, columns=columnas, show="headings")
+        # Panel derecho (Tablas).
+        panel_derecho = tk.LabelFrame(frame_principal)
+        panel_derecho.pack(side="right", fill="both", expand=True)
+
+        # Contenido panel izquierdo.
+        self.label_total = tk.Label(panel_izquierdo, text="Total: $0", font=("Arial", 22, "bold"), fg="green")
+        self.label_total.pack(side="bottom", pady=(20, 40))
+
+        # Formulario de Venta.
+        frame_formulario = tk.Frame(panel_izquierdo)
+        frame_formulario.pack(side="bottom", fill="x")
+
+        # Inputs organizados en el panel izquierdo.
+        contenedor_input = tk.Frame(frame_formulario)
+        contenedor_input.pack()
+
+        tk.Label(contenedor_input, text="Folio:", font=("Arial", 10)).grid(row=0, column=0, sticky="e", padx=5, pady=10)
+        self.entrada_folio = tk.Entry(contenedor_input, width=15)
+        self.entrada_folio.grid(row=0, column=1, sticky="w", padx=5, pady=10)
+
+        tk.Label(contenedor_input, text="RUT Vendedor", font=("Arial", 10)).grid(row=1, column=0, sticky="e", padx=5, pady=10)
+        self.entrada_rut = tk.Entry(contenedor_input, width=15)
+        self.entrada_rut.grid(row=1, column=1, sticky="w", padx=5, pady=10)
+
+        # Botón
+        btn = tk.Button(frame_formulario, text="Registrar Venta", bg="green", fg="white", font=("Arial", 11, "bold"), cursor="hand2", command=self.guardar_venta)
+        btn.pack(fill="x", pady=25)
+
+        # Imagen
+        try:
+            # dirtectorio actual
+            directorio_actual = os.path.dirname(os.path.abspath(__file__))
+
+            # Retrocede una carpeta para llegar a la raíz del proyecto
+            directorio_raiz = os.path.dirname(directorio_actual)
+
+            ruta_imagen = os.path.join(directorio_raiz, "img", "cajero.png")
+
+            print(f"Buscando imagen en: {ruta_imagen}")
+            self.img_ref = tk.PhotoImage(file=ruta_imagen)
+            label_imagen = tk.Label(panel_izquierdo, image=self.img_ref)
+            label_imagen.pack(side="top", expand=True)
+
+        except Exception as e:
+            print("Imagen no encontrada.")
+            tk.Label(panel_izquierdo, text="Imagen no encontrada. Contacte con el Administrador", fg="gray").pack(side="top", expand=True)
+
+        # Contenido panel derecho.
+        # Tabla de productos.
+        productos_frame = tk.LabelFrame(panel_derecho, text="Catálogo de Productos", font=("Arial", 10, "bold"))
+        productos_frame.pack(side="top", fill="both",expand=True, pady=(0, 10))
+
+        columnas = ("producto_id", "nombre", "tipo_producto_id", "precio_unitario" ,"cantidad") # Se generan los nombres de las columnas.
+        self.tabla_productos = ttk.Treeview(productos_frame, columns=columnas, show="headings")
 
         # Define los encabezados.
         self.tabla_productos.heading("producto_id", text="ID")
@@ -42,8 +96,8 @@ class Vista_ventas(tk.Frame):
         self.tabla_productos.column("precio_unitario", width=120, anchor="sw")
         self.tabla_productos.column("cantidad", width=120, anchor="sw")
 
-        # Agrega una barra de scroll
-        barra_scroll = ttk.Scrollbar(self, orient="vertical", command=self.tabla_productos.yview)
+        # Agrega una barra de scroll.
+        barra_scroll = ttk.Scrollbar(productos_frame, orient="vertical", command=self.tabla_productos.yview)
         self.tabla_productos.configure(yscrollcommand=barra_scroll.set)
 
         barra_scroll.pack(side="right", fill="y")
@@ -52,20 +106,64 @@ class Vista_ventas(tk.Frame):
         # Al hacer doble click izquierdo se llama a la siguiente función.
         self.tabla_productos.bind("<Double-1>", self.seleccionar_producto)
 
-        self.cargar_datos()
+        # Tabla de detalle venta.
+        detalle_frame = tk.LabelFrame(panel_derecho, text="Carrito de Compra", font=("Arial", 10, "bold"), fg="blue")
+        detalle_frame.pack(side="bottom", fill="both", expand=True)
 
-        tk.Button(self, text="Registrar Venta", bg="green", fg="white", command=self.guardar_venta).pack(pady=20)
+        columna_detalle = ("producto_id", "precio_unitario", "cantidad", "subtotal")
+        self.tabla_detalle = ttk.Treeview(detalle_frame, columns=columna_detalle, show="headings", height=6)
+
+        self.tabla_detalle.heading("producto_id", text="Nombre Producto")
+        self.tabla_detalle.heading("precio_unitario", text="Precio c/u")
+        self.tabla_detalle.heading("cantidad", text="Cant.")
+        self.tabla_detalle.heading("subtotal", text="Subtotal")
+
+        self.tabla_detalle.column("producto_id", width=180, anchor="w")
+        self.tabla_detalle.column("precio_unitario", width=80, anchor="e")
+        self.tabla_detalle.column("cantidad", width=60, anchor="center")
+        self.tabla_detalle.column("subtotal", width=80, anchor="e")
+
+        # Barra de scroll para detalle.
+        scroll_detalle = ttk.Scrollbar(detalle_frame, orient="vertical", command=self.tabla_detalle.yview)
+        self.tabla_detalle.configure(yscrollcommand=scroll_detalle.set)
+
+        scroll_detalle.pack(side="right", fill="y")
+        self.tabla_detalle.pack(side="left", fill="both", expand=True)
+
+        # Carga los datos de la tabla de productos.
+        self.cargar_datos()
 
     def guardar_venta(self):
         folio = self.entrada_folio.get()
-        folio = int(folio)
+        # Verifica que se ingrese un folio.
+        if not folio:
+            messagebox.showwarning("Falta Información", "Por favor ingresa el número de Folio.")
+            return
+        try:
+            folio = int(folio)
+        except ValueError:
+            messagebox.showerror("Error", "El Folio debe ser un número.")
+
         rut_vendedor = self.entrada_rut.get()
+
+        # Verifica que se haya ingresado el RUT del vendedor.
+        if not rut_vendedor:
+            messagebox.showwarning("Falta Información", " Por favor ingresa el RUT del vendedor")
+            return
 
         try:
             v = Ventas()
             v.folio = folio
             v.rut_vendedor = rut_vendedor
             v.ingresar_venta()
+
+            self.total_venta = 0
+            self.label_total.config(text="Total: $0")
+            
+            # Borrar items del carrito visual.
+            for item in self.tabla_detalle.get_children():
+                self.tabla_detalle.delete(item)
+                
             messagebox.showinfo("Éxito", "Venta guardada")
         except Exception as e:
             messagebox.showerror("Error", str(e))
@@ -102,7 +200,15 @@ class Vista_ventas(tk.Frame):
         # Guarda la cantidad que se va a insertar en la tabla detalle_venta
         cantidad = simpledialog.askinteger("Cantidad", f"Precio ${precio_unitario}\nStock: {stock_actual}\nIngresa la canitdad:")
 
+        # Si se cerro la pantalla emergente sin colocar cantidad.
+        # No hace nada.
+        if cantidad is None:
+            return
+        
         cant = int(cantidad)
+        if cant <= 0:
+            messagebox.showwarning("Cantidad Inválida", "La cantidad debe ser mayor a 0.")
+            return
 
         if cant:
             # Verifica que no se haya ingresado más de la cantidad disponible en la Base de Datos.
@@ -112,6 +218,12 @@ class Vista_ventas(tk.Frame):
 
             subtotal = precio_unitario * cantidad
             folio_id = self.entrada_folio.get()
+            
+            # Valida que se haya ingresado un folio.
+            if not folio_id:
+                messagebox.showwarning("Falta Folio", "Primero debes ingresar un número de Folio y registrar la venta.")
+                return
+            
             folio_id = int(folio_id)
 
             try:
@@ -123,5 +235,17 @@ class Vista_ventas(tk.Frame):
 
                 d.insertar_detalle()
 
+                # Actualiza el total en la tabla de detalle.
+                self.tabla_detalle.insert("", tk.END, values=(nombre, int(precio_unitario), cant, int(subtotal)))
+
+                # Suma el total en el panel derecho.
+                self.total_venta += subtotal
+                self.label_total.config(text=f"Total: ${int(self.total_venta)}")
+
+                # Actualiza el total de la venta en la Base de Datos.
+                v = Ventas()
+                v.actualizar_total(folio=folio_id, total=self.total_venta)
+
             except Exception as e:
                 messagebox.showerror("Error", str(e))
+    
