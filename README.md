@@ -26,3 +26,11 @@ Proyecto de Funciones y Matrices
 - Se agrega una imagen(temporal)
 - al momento de hacer la venta y insertar productos en el detalle, se actualiza el total de la venta, tanto en la interfaz como en la Base de Datos.
 
+### 26 De Noviembre 2025
+#### Marco Milanca
+- Se modifica el flujo de venta, ahora al presionar el btn ingresar venta se guarda en la Base de datos el detalle y se actualiza la cantidad del producto.
+- Se cambio la img que era temporal.
+- Se agrego un select para seleccionar un tipo de documento (Boleta o Factura).
+- Se borro el metodo actualizar_total, ahora es parte de ingresar_venta.
+
+

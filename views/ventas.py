@@ -2,8 +2,8 @@ import tkinter as tk
 import os
 from tkinter import ttk, messagebox, simpledialog
 from models.ventas import Ventas
-from models.detalle_venta import Detalle_venta
 from models.productos import Productos
+from models.documento import Documentos
 
 class Vista_ventas(tk.Frame):
     def __init__(self, parent):
@@ -12,6 +12,7 @@ class Vista_ventas(tk.Frame):
 
         # Inicializa la variable para almacenar el total de la venta.
         self.total_venta = 0
+        self.carrito = [] # Lista que guarda los productos seleccionados para el detalle.
         # Llama a la ventana.
         self.ventana_vista()
     
@@ -33,6 +34,7 @@ class Vista_ventas(tk.Frame):
         panel_derecho.pack(side="right", fill="both", expand=True)
 
         # Contenido panel izquierdo.
+        # Total de venta.
         self.label_total = tk.Label(panel_izquierdo, text="Total: $0", font=("Arial", 22, "bold"), fg="green")
         self.label_total.pack(side="bottom", pady=(20, 40))
 
@@ -48,9 +50,33 @@ class Vista_ventas(tk.Frame):
         self.entrada_folio = tk.Entry(contenedor_input, width=15)
         self.entrada_folio.grid(row=0, column=1, sticky="w", padx=5, pady=10)
 
-        tk.Label(contenedor_input, text="RUT Vendedor", font=("Arial", 10)).grid(row=1, column=0, sticky="e", padx=5, pady=10)
+        tk.Label(contenedor_input, text="RUT Vendedor:", font=("Arial", 10)).grid(row=1, column=0, sticky="e", padx=5, pady=10)
         self.entrada_rut = tk.Entry(contenedor_input, width=15)
         self.entrada_rut.grid(row=1, column=1, sticky="w", padx=5, pady=10)
+
+        tk.Label(contenedor_input, text="Tipo de Documento:", font=("Arial", 10)).grid(row=2, column=0, sticky="e", padx=5, pady=10)
+        self.select_documento = ttk.Combobox(contenedor_input, state="readonly", width=12)
+        self.select_documento.grid(row=2, column=1, sticky="w", padx=5, pady=10)
+
+        self.ids_documento = {} # Guarda el ID y el nombre de los documentos.
+
+        try:
+            d = Documentos()
+            tipos_doc = d.obtener_tipo_documento()
+
+            nombre_doc = []
+            for id_doc, nom_doc in tipos_doc:
+                nombre_doc.append(nom_doc)
+                self.ids_documento[nom_doc] = id_doc
+            
+            self.select_documento['values'] = nombre_doc
+
+            # Selecciona el primero por defecto.
+            if nombre_doc:
+                self.select_documento.current(0)
+        
+        except Exception as e:
+            print(f"Error cargando combobox: {e}")
 
         # Botón
         btn = tk.Button(frame_formulario, text="Registrar Venta", bg="green", fg="white", font=("Arial", 11, "bold"), cursor="hand2", command=self.guardar_venta)
@@ -66,7 +92,6 @@ class Vista_ventas(tk.Frame):
 
             ruta_imagen = os.path.join(directorio_raiz, "img", "cajero.png")
 
-            print(f"Buscando imagen en: {ruta_imagen}")
             self.img_ref = tk.PhotoImage(file=ruta_imagen)
             label_imagen = tk.Label(panel_izquierdo, image=self.img_ref)
             label_imagen.pack(side="top", expand=True)
@@ -143,6 +168,7 @@ class Vista_ventas(tk.Frame):
             folio = int(folio)
         except ValueError:
             messagebox.showerror("Error", "El Folio debe ser un número.")
+            return
 
         rut_vendedor = self.entrada_rut.get()
 
@@ -150,19 +176,48 @@ class Vista_ventas(tk.Frame):
         if not rut_vendedor:
             messagebox.showwarning("Falta Información", " Por favor ingresa el RUT del vendedor")
             return
+        
+        seleccion = self.select_documento.get()
+
+        if not seleccion:
+            messagebox.showwarning("Atención", "Seleccione un tipo de documento")
+            return
+        
+        # Se valida que hayan ingresado productos al carrito.
+        if not hasattr(self, 'carrito') or not self.carrito:
+            messagebox.showwarning("Carrito Vacío", "No has agregado productos a la venta.")
+            return
+        
+        # Traduce el texto al ID.
+        id_doc_select = self.ids_documento[seleccion]
 
         try:
             v = Ventas()
             v.folio = folio
             v.rut_vendedor = rut_vendedor
-            v.ingresar_venta()
+            v.documento_id = id_doc_select
+            v.total = self.total_venta
+            v.ingresar_venta(self.carrito)
 
-            self.total_venta = 0
-            self.label_total.config(text="Total: $0")
+            # Limpia la interfaz.
+            self.total_venta = 0 # Limpia el total.
+            self.carrito = [] # Limpia el carrito
+
+            self.entrada_folio.delete(0, tk.END) # Limpia el campo de folio.
+            self.entrada_rut.delete(0, tk.END) # Limpia el campo de rut.
+
+            # Asigna el primer campo como predeterminado.
+            if self.select_documento['values']:
+                self.select_documento.current(0)
+            
+            self.label_total.config(text="Total: $0") # Muestra el total en la interfaz.
             
             # Borrar items del carrito visual.
             for item in self.tabla_detalle.get_children():
                 self.tabla_detalle.delete(item)
+
+            # Carga los datos nuevamente.
+            self.cargar_datos()
                 
             messagebox.showinfo("Éxito", "Venta guardada")
         except Exception as e:
@@ -170,11 +225,16 @@ class Vista_ventas(tk.Frame):
     
     def cargar_datos(self):
         try:
+            # Recarga la tabla.
+            for item in self.tabla_productos.get_children():
+                self.tabla_productos.delete(item)
+
             p = Productos()
             datos = p.mostrar_productos()
 
             for producto in datos:
                 self.tabla_productos.insert("", tk.END, values=producto)
+
         except Exception as e:
             print(f"Error al cargar vista: {e}")
 
@@ -210,42 +270,25 @@ class Vista_ventas(tk.Frame):
             messagebox.showwarning("Cantidad Inválida", "La cantidad debe ser mayor a 0.")
             return
 
-        if cant:
-            # Verifica que no se haya ingresado más de la cantidad disponible en la Base de Datos.
-            if cant > stock_actual:
-                messagebox.showwarning("Stock insuficiente.", f"Solo quedan {stock_actual} unidades.")
-                return
+        # Verifica que no se haya ingresado más de la cantidad disponible en la Base de Datos.
+        if cant > stock_actual:
+            messagebox.showwarning("Stock insuficiente.", f"Solo quedan {stock_actual} unidades.")
+            return
 
-            subtotal = precio_unitario * cantidad
-            folio_id = self.entrada_folio.get()
-            
-            # Valida que se haya ingresado un folio.
-            if not folio_id:
-                messagebox.showwarning("Falta Folio", "Primero debes ingresar un número de Folio y registrar la venta.")
-                return
-            
-            folio_id = int(folio_id)
+        subtotal = precio_unitario * cantidad
 
-            try:
-                d = Detalle_venta()
-                d.folio_id = folio_id
-                d.producto_id = id_producto
-                d.cantidad = cant
-                d.subtotal = subtotal
+        producto = {
+            'producto_id': id_producto,
+            'nombre': nombre,
+            'precio_unitario': precio_unitario,
+            'cantidad': cant,
+            'subtotal': subtotal
+        }
+        self.carrito.append(producto)
 
-                d.insertar_detalle()
+        # Muestra el producto seleccionado en la tabla detalle.
+        self.tabla_detalle.insert("", tk.END, values=(nombre, int(precio_unitario), cant, int(subtotal)))
 
-                # Actualiza el total en la tabla de detalle.
-                self.tabla_detalle.insert("", tk.END, values=(nombre, int(precio_unitario), cant, int(subtotal)))
-
-                # Suma el total en el panel derecho.
-                self.total_venta += subtotal
-                self.label_total.config(text=f"Total: ${int(self.total_venta)}")
-
-                # Actualiza el total de la venta en la Base de Datos.
-                v = Ventas()
-                v.actualizar_total(folio=folio_id, total=self.total_venta)
-
-            except Exception as e:
-                messagebox.showerror("Error", str(e))
-    
+        # Muestra el total actualizado en la interfaz.
+        self.total_venta += subtotal
+        self.label_total.config(text=f"Total: ${int(self.total_venta)}")

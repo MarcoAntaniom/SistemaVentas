@@ -7,13 +7,10 @@ class Detalle_venta:
     cantidad: int
     subtotal: int
 
-    def insertar_detalle(self):
+    # Se elimina el insertar detalle de aquí para mejorar el flujo de venta.
+
         try:
             c = ConexionDB()
-            sql = """INSERT INTO detalle_venta (folio_id, producto_id, cantidad, subtotal)
-                        VALUES (:folio, :producto, :cant, :subtotal)"""
-            c.cursor.execute(sql, folio=self.folio_id, producto=self.producto_id, cant=self.cantidad, subtotal=self.subtotal)
-            c.conexion.commit()
 
         except Exception as e:
             print(f"Error en la BD: {e}")
