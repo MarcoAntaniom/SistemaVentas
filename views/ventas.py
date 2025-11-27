@@ -4,6 +4,7 @@ from tkinter import ttk, messagebox, simpledialog
 from models.ventas import Ventas
 from models.productos import Productos
 from models.documento import Documentos
+from utils.documento import generar_documento
 
 class Vista_ventas(tk.Frame):
     def __init__(self, parent):
@@ -198,6 +199,14 @@ class Vista_ventas(tk.Frame):
             v.documento_id = id_doc_select
             v.total = self.total_venta
             v.ingresar_venta(self.carrito)
+
+            # Envia los datos para generar el pdf.
+            generar_documento(
+                folio=folio,
+                tipo_documento=seleccion,
+                productos=self.carrito,
+                total=self.total_venta
+            )
 
             # Limpia la interfaz.
             self.total_venta = 0 # Limpia el total.

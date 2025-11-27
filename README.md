@@ -32,5 +32,5 @@ Proyecto de Funciones y Matrices
 - Se cambio la img que era temporal.
 - Se agrego un select para seleccionar un tipo de documento (Boleta o Factura).
 - Se borro el metodo actualizar_total, ahora es parte de ingresar_venta.
-
-
+- Se crea un archivo que crea la Boleta/Factura en pdf, utilizando la libreria reportlab, este mismo se genera y se abre automáticamente al ingresar la venta en la Base de Datos.
+- Las Boletas/Facturas se guardan en una carpeta por ordenadas por año y mes.
