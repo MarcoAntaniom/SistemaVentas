@@ -17,11 +17,11 @@ class Usuario:
             sql="INSERT INTO usuario VALUE(rut:,nombre:,apellido_paterno:,apellido_materno:,estado_id:,contrasena:,rol_id:)"
 
             c.conexion.execute(sql,rut=self.rut,nombre=self.nombre,apellido_paterno=self.apellido_paterno,apellido_materno=self.apellido_materno,estado_id=self.estado_id,contrasena=self.contrasena,rol_id=self.rol_id)
-            c.conexion.commit
+            c.conexion.commit()
         except Exception as e:
             print(f"ERROR EN LA BASE DE DATOS {e}")
     def consultar_usu(self):
         c = ConexionDB()
         sql="SELECT * FROM usuario;"
         c.conexion.execute(sql)
-        c.conexion.commit
+        c.conexion.commit()
