@@ -38,5 +38,9 @@ Proyecto de Funciones y Matrices
 
 ### 28 De Noviembre 2025
 #### Juaquin Álvarez
--se crea el modulo usuarios con el apartado de crear un nuevo usuario y uno mas usuarios.
--se deja en funcionamiento temporal crear usuario para el testeo del modulo.
+- Se crea el modulo usuarios con el apartado de crear un nuevo usuario y uno mas usuarios.
+- Se deja en funcionamiento temporal crear usuario para el testeo del modulo.
+
+### 29 De Noviembre 2025
+#### Marco Milanca
+- Se agrega la documentación.
