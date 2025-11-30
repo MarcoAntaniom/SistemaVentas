@@ -49,3 +49,4 @@ Proyecto de Funciones y Matrices
 - En ingresar_venta el rut ya se obtiene automáticamente desde el inicio de sesión, y el input se bloqueo para que no pueda ser cambiado.
 - se crea el archivo requirements.txt para instalar automáticamente las librerias que se utilizan.
 - Para instalar las librerias con requirements.txt hay que hacer lo siguiente en la terminal: `pip install -r requirements.txt`
+- Se modifica el documento para que se vea mas profesional, y se incluye el logo de MiniYa!.

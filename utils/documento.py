@@ -30,6 +30,14 @@ def generar_documento(folio, tipo_documento, productos, total):
     c = canvas.Canvas(ruta_completa, pagesize=letter)
     width, height = letter
 
+    # Ruta al logo.
+    ruta_logo = os.path.join(directorio_raiz, "img", "logo.png")
+
+    try:
+        c.drawImage(ruta_logo, 50, height - 100, width=80, height=80, preserveAspectRatio=True, mask="auto")
+    except Exception as e:
+        print(f"No se pudo cargar el logo: {e}")
+
     # Lógica del pdf.
     titulo = "Comprobante de Venta"
 
@@ -41,22 +49,25 @@ def generar_documento(folio, tipo_documento, productos, total):
         titulo = "Boleta de Venta"
     
     # Encabezado.
-    c.setFont("Helvetica-Bold", 16)
-    c.drawCentredString(width / 2, height - 50, titulo)
+    c.setFont("Helvetica-Bold", 14)
+    c.drawRightString(width - 50, height - 45, titulo)
 
     c.setFont("Helvetica", 10)
-    c.drawString(50, height - 100, f"Folio: {folio}")
-    c.drawString(50, height - 115, f"Fecha: {datetime.date.today()}")
+    c.drawRightString(width - 50, height - 75, f"Folio: {folio}")
+    c.drawRightString(width - 50, height - 95, f"Fecha: {datetime.date.today()}")
+
+    # Dibuja una línea.
+    c.line(50, height - 110, width - 50, height - 110)
     
     # Detalle de Venta.
-    y = height - 180
+    y = height - 130
     c.setFont("Helvetica-Bold", 10)
     c.drawString(50, y, "Producto")
     c.drawString(250, y, "Precio")
     c.drawString(350, y, "Cant.")
     c.drawString(450, y, "Subtotal")
 
-    y -= 20
+    y -= 25
     c.setFont("Helvetica", 10)
 
     # Obtiene los productos de la venta.
@@ -68,14 +79,17 @@ def generar_documento(folio, tipo_documento, productos, total):
 
         # Agrega los productos al pdf.
         c.drawString(50, y, f"{nombre}")
-        c.drawString(250, y, f"{int(precio)}")
+        c.drawString(250, y, f"${int(precio)}")
         c.drawString(350, y, f"{cantidad}")
-        c.drawString(450, y, f"{int(subtotal)}")
+        c.drawString(450, y, f"${int(subtotal)}")
         y -= 20
+
+    # Dibuja una línea.
+    c.line(350, y + 10, 500, y + 10)
 
     # Total.
     c.setFont("Helvetica-Bold", 12)
-    c.drawString(350, y - 20, "Total de la Venta:")
+    c.drawString(350, y - 20, "Total a Pagar:")
     c.drawString(450, y - 20, f"${int(total)}")
 
     # Finaliza y guarda.
