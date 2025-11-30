@@ -14,6 +14,9 @@ class Usuario:
     def agregar_usuario(self):
         try:
             c = ConexionDB()
+            
+            hashed = bcrypt.hashpw(self.contrasena.encode('utf-8'), bcrypt.gensalt())
+            hashed = hashed.decode('utf-8')
 
             sql="INSERT INTO usuario VALUE(rut:,nombre:,apellido_paterno:,apellido_materno:,estado_id:,contrasena:,rol_id:)"
 
@@ -28,6 +31,20 @@ class Usuario:
         sql="SELECT * FROM usuario;"
         c.cursor.execute(sql)
         c.conexion.commit()
+
+    def buscar_usuario_rut(self, rut):
+        try:
+            c = ConexionDB()
+            sql = "SELECT * FROM usuario WHERE rut = :rut"
+
+            c.conexion.execute(sql, rut=rut)
+            resultado = c.conexion.fetchone()
+
+            return resultado
+
+        except Exception as e:
+            print(f"ERROR EN CONSULTA: {e}")
+            return None
 
     def iniciar_sesion(self, rut, contrasena: bytes):
         try:
