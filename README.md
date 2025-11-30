@@ -35,7 +35,6 @@ Proyecto de Funciones y Matrices
 - Se crea un archivo que crea la Boleta/Factura en pdf, utilizando la libreria reportlab, este mismo se genera y se abre automáticamente al ingresar la venta en la Base de Datos.
 - Las Boletas/Facturas se guardan en una carpeta por ordenadas por año y mes.
 
-
 ### 28 De Noviembre 2025
 #### Juaquin Álvarez
 - Se crea el modulo usuarios con el apartado de crear un nuevo usuario y uno mas usuarios.
@@ -50,3 +49,7 @@ Proyecto de Funciones y Matrices
 - se crea el archivo requirements.txt para instalar automáticamente las librerias que se utilizan.
 - Para instalar las librerias con requirements.txt hay que hacer lo siguiente en la terminal: `pip install -r requirements.txt`
 - Se modifica el documento para que se vea mas profesional, y se incluye el logo de MiniYa!.
+
+### 30 De Noviembre 2025
+#### Juaquin Álvarez
+- Se termina de codificar el apartado de la creación de nuevos usuarios para que funcione correctamente, al igual que la encriptación de sus claves, la búsqueda de todos los usuarios existentes y la búsqueda de un solo usuario a través de su RUT.
