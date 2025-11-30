@@ -48,4 +48,4 @@ Proyecto de Funciones y Matrices
 - Se modifica el app para manejar redireccionamiento con rol_id.
 - En ingresar_venta el rut ya se obtiene automáticamente desde el inicio de sesión, y el input se bloqueo para que no pueda ser cambiado.
 - se crea el archivo requirements.txt para instalar automáticamente las librerias que se utilizan.
-- Para instalar las librerias con requirements.txt hay que hacer lo siguiente en la terminal: pip install `-r requirements.txt`
+- Para instalar las librerias con requirements.txt hay que hacer lo siguiente en la terminal: `pip install -r requirements.txt`
