@@ -44,3 +44,8 @@ Proyecto de Funciones y Matrices
 ### 29 De Noviembre 2025
 #### Marco Milanca
 - Se agrega la documentación.
+- Se crea el login, y se deja funcionando correctamente.
+- Se modifica el app para manejar redireccionamiento con rol_id.
+- En ingresar_venta el rut ya se obtiene automáticamente desde el inicio de sesión, y el input se bloqueo para que no pueda ser cambiado.
+- se crea el archivo requirements.txt para instalar automáticamente las librerias que se utilizan.
+- Para instalar las librerias con requirements.txt hay que hacer lo siguiente en la terminal: pip install `-r requirements.txt`

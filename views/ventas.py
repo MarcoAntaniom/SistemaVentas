@@ -7,9 +7,12 @@ from models.documento import Documentos
 from utils.documento import generar_documento
 
 class Vista_ventas(tk.Frame):
-    def __init__(self, parent):
+    def __init__(self, parent, rut):
         super().__init__(parent)
         self.pack(fill="both", expand=True)
+
+        # Obtiene el rut del vendedor, desde el momento que inicio sesión.
+        self.rut_vendedor = rut
 
         # Inicializa la variable para almacenar el total de la venta.
         self.total_venta = 0
@@ -54,6 +57,9 @@ class Vista_ventas(tk.Frame):
         tk.Label(contenedor_input, text="RUT Vendedor:", font=("Arial", 10)).grid(row=1, column=0, sticky="e", padx=5, pady=10)
         self.entrada_rut = tk.Entry(contenedor_input, width=15)
         self.entrada_rut.grid(row=1, column=1, sticky="w", padx=5, pady=10)
+
+        self.entrada_rut.insert(0, self.rut_vendedor) # Rellena el campo con el RUT del usuario que inicio sesión.
+        self.entrada_rut.config(state="readonly")
 
         tk.Label(contenedor_input, text="Tipo de Documento:", font=("Arial", 10)).grid(row=2, column=0, sticky="e", padx=5, pady=10)
         self.select_documento = ttk.Combobox(contenedor_input, state="readonly", width=12)
