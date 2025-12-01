@@ -48,7 +48,24 @@ class Ventas:
              if c:
                 c.cursor.close()
                 c.conexion.close()
-                
+
+
+    def consultar_ventas(self):
+        try:
+            c = ConexionDB()
+            sql = "SELECT * FROM ventas"
+            c.cursor.execute(sql)
+            resultados = c.cursor.fetchall()
+            return resultados
+
+        except Exception as e:
+            print(f"ERROR EN CONSULTA: {e}")
+            return []
+
+        finally:
+            c.cursor.close()
+            c.conexion.close()
+
     def anular_venta(self, folio):
         try:
             c = ConexionDB()
