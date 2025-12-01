@@ -11,36 +11,62 @@ class Usuario:
     contrasena:str
     rol_id:int
 
+    def __str__(self):
+        f"RUT: {self.rut} - NOMBRE: {self.nombre} - APELLIDO_PATERNO: {self.apellido_paterno} - APELLIDO_MATERNO: {self.apellido_materno} - ROL_ID: {self.rol_id} - ESTADO_ID: {self.estado_id} "
+
     def agregar_usuario(self):
         try:
             c = ConexionDB()
 
             hashed = bcrypt.hashpw(self.contrasena.encode('utf-8'), bcrypt.gensalt())
             self.contrasena = hashed.decode('utf-8')
-            contra=self.contrasena
-            print("DEBUG: Contraseña antes de encriptar:", self.contrasena)
-            sql="INSERT INTO usuario (rut,nombre,apellido_paterno,apellido_materno,estado_id,contrasena,rol_id) VALUES (:rut,:nombre,:apellido_paterno,:apellido_materno,:estado_id,:contrasena,:rol_id)"
 
-            c.cursor.execute(sql,rut=self.rut,nombre=self.nombre,apellido_paterno=self.apellido_paterno,apellido_materno=self.apellido_materno,estado_id=self.estado_id,contrasena=contra,rol_id=self.rol_id)
+            sql = """
+            INSERT INTO usuario (rut, nombre, apellido_paterno, apellido_materno, estado_id, contrasena, rol_id)
+            VALUES (:rut, :nombre, :apellido_paterno, :apellido_materno, :estado_id, :contrasena, :rol_id)
+            """
+
+            c.cursor.execute(sql,
+                             rut=self.rut,
+                             nombre=self.nombre,
+                             apellido_paterno=self.apellido_paterno,
+                             apellido_materno=self.apellido_materno,
+                             estado_id=self.estado_id,
+                             contrasena=self.contrasena,
+                             rol_id=self.rol_id)
+
             c.conexion.commit()
-            c.conexion.close()
 
         except Exception as e:
             print(f"ERROR EN LA BASE DE DATOS {e}")
 
+        finally:
+            c.cursor.close()
+            c.conexion.close()
+
     def consultar_usu(self):
-        c = ConexionDB()
-        sql="SELECT * FROM usuario"
-        c.cursor.execute(sql)
-        c.conexion.commit()
+        try:
+            c = ConexionDB()
+            sql = "SELECT * FROM usuario"
+            c.cursor.execute(sql)
+            resultados = c.cursor.fetchall()
+            return resultados
+
+        except Exception as e:
+            print(f"ERROR EN CONSULTA: {e}")
+            return []
+
+        finally:
+            c.cursor.close()
+            c.conexion.close()
 
     def buscar_usuario_rut(self, rut):
         try:
             c = ConexionDB()
             sql = "SELECT * FROM usuario WHERE rut = :rut"
 
-            c.conexion.execute(sql, rut=rut)
-            resultado = c.conexion.fetchone()
+            c.cursor.execute(sql, rut=rut)
+            resultado = c.cursor.fetchone()
 
             return resultado
 

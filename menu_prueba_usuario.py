@@ -27,9 +27,9 @@ while True:
         elif opcion == "2":
             print("\n--- Lista de usuarios ---")
             u = Usuario()
-            usuarios = u.consultar_usu()
+            usuar = u.consultar_usu()
 
-            for fila in usuarios:
+            for fila in usuar:
                 print(fila)
 
         elif opcion == "3":
