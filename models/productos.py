@@ -21,3 +21,27 @@ class Productos:
             c.cursor.close()
             c.conexion.close()
 
+    def deshabilitar_producto(self, producto_id):
+        try:
+            c = ConexionDB()
+            sql = """
+                UPDATE productos
+                SET estado_producto_id = 2
+                WHERE producto_id = :producto_id
+            """
+
+            c.cursor.execute(sql, producto_id=producto_id)
+            c.conexion.commit()
+
+            return True
+
+        except Exception as e:
+            print(f"Error al deshabilitar producto: {e}")
+            return False
+
+        finally:
+            try:
+                c.cursor.close()
+                c.conexion.close()
+            except:
+                pass
