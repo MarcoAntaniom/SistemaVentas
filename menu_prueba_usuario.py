@@ -1,7 +1,7 @@
-from usuarios import Usuario
+from models.usuarios import Usuario
 
-def menu():
-    while True:
+
+while True:
         print("\n===== MENÚ DE USUARIOS =====")
         print("1. Agregar usuario")
         print("2. Consultar todos los usuarios")

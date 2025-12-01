@@ -14,21 +14,23 @@ class Usuario:
     def agregar_usuario(self):
         try:
             c = ConexionDB()
-            
+
             hashed = bcrypt.hashpw(self.contrasena.encode('utf-8'), bcrypt.gensalt())
-            hashed = hashed.decode('utf-8')
+            self.contrasena = hashed.decode('utf-8')
+            contra=self.contrasena
+            print("DEBUG: Contraseña antes de encriptar:", self.contrasena)
+            sql="INSERT INTO usuario (rut,nombre,apellido_paterno,apellido_materno,estado_id,contrasena,rol_id) VALUES (:rut,:nombre,:apellido_paterno,:apellido_materno,:estado_id,:contrasena,:rol_id)"
 
-            sql="INSERT INTO usuario VALUE(rut:,nombre:,apellido_paterno:,apellido_materno:,estado_id:,contrasena:,rol_id:)"
-
-            c.cursor.execute(sql,rut=self.rut,nombre=self.nombre,apellido_paterno=self.apellido_paterno,apellido_materno=self.apellido_materno,estado_id=self.estado_id,contrasena=self.contrasena,rol_id=self.rol_id)
+            c.cursor.execute(sql,rut=self.rut,nombre=self.nombre,apellido_paterno=self.apellido_paterno,apellido_materno=self.apellido_materno,estado_id=self.estado_id,contrasena=contra,rol_id=self.rol_id)
             c.conexion.commit()
+            c.conexion.close()
 
         except Exception as e:
             print(f"ERROR EN LA BASE DE DATOS {e}")
 
     def consultar_usu(self):
         c = ConexionDB()
-        sql="SELECT * FROM usuario;"
+        sql="SELECT * FROM usuario"
         c.cursor.execute(sql)
         c.conexion.commit()
 
