@@ -53,3 +53,10 @@ Proyecto de Funciones y Matrices
 ### 30 De Noviembre 2025
 #### Juaquin Álvarez
 - Se termina de codificar el apartado de la creación de nuevos usuarios para que funcione correctamente, al igual que la encriptación de sus claves, la búsqueda de todos los usuarios existentes y la búsqueda de un solo usuario a través de su RUT.
+
+### 1 De Noviembre 2025
+#### Juaquin Álvarez
+- Se agrego la función de buscar todas las ventas dejandola funcional.
+-se crearon las clases de proveedor y compra para la incorporacion de nuevas funciones.
+-se agrego la funcion de agregar compra dejandola funcional para la interfaz
+-se agrego la funcion de actualizar proveedor dejandola funcional para la interfaz y cambiar cierta informacion de ellos.
