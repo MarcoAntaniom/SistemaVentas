@@ -57,6 +57,9 @@ Proyecto de Funciones y Matrices
 ### 1 De Diciembre 2025
 #### Juaquin Álvarez
 - Se agrego la función de buscar todas las ventas dejandola funcional.
--se crearon las clases de proveedor y compra para la incorporacion de nuevas funciones.
--se agrego la funcion de agregar compra dejandola funcional para la interfaz
--se agrego la funcion de actualizar proveedor dejandola funcional para la interfaz y cambiar cierta informacion de ellos.
+- se crearon las clases de proveedor y compra para la incorporacion de nuevas funciones.
+- se agrego la funcion de agregar compra dejandola funcional para la interfaz
+- se agrego la funcion de actualizar proveedor dejandola funcional para la interfaz y cambiar cierta informacion de ellos.
+
+#### Marco Milanca
+- Se modifica el código que crea el PDF de boleta/factura, ahora si es una factura desglosa el total para mostrarlo en el PDF.

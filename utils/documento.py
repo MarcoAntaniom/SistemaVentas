@@ -88,9 +88,30 @@ def generar_documento(folio, tipo_documento, productos, total):
     c.line(350, y + 10, 500, y + 10)
 
     # Total.
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(350, y - 20, "Total a Pagar:")
-    c.drawString(450, y - 20, f"${int(total)}")
+    if "Factura" in tipo_documento:
+        neto = int(total / 1.19)
+        iva = int(total - neto)
+
+        c.setFont("Helvetica", 10)
+
+        # Muestra el neto.
+        c.drawString(350, y - 20, "Monto Neto:")
+        c.drawString(450, y - 20, f"${neto}")
+
+        # Muestra el IVA.
+        c.drawString(350, y - 35, "IVA (19%):")
+        c.drawString(450, y - 35, f"${iva}")
+
+        # Muestra el total.
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(350, y - 55, "Total a Pagar:")
+        c.drawString(450, y - 55, f"${int(total)}")
+        
+    else:
+        # Si es boleta, se muestra sin el desglose.
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(350, y - 20, "Total a Pagar:")
+        c.drawString(450, y - 20, f"${int(total)}")
 
     # Finaliza y guarda.
     c.save()
