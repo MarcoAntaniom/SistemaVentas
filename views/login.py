@@ -6,14 +6,14 @@ from models.usuarios import Usuario
 
 class Iniciar_sesion(tk.Frame):
     def __init__(self, parent):
-        super().__init__(parent)
+        super().__init__(parent, bg="white")
         self.parent = parent
         self.pack(fill="both", expand=True)
 
         self.ventana_login()
 
     def ventana_login(self):
-        tk.Label(self, text="Iniciar Sesión", font=("Arial", 16, "bold")).pack(pady=20)
+        tk.Label(self, text="Iniciar Sesión", font=("Arial", 16, "bold"), bg="white").pack(pady=20)
 
         # Logo.
         try:
@@ -32,19 +32,19 @@ class Iniciar_sesion(tk.Frame):
             logo_redimensionado = logo_pil.resize(nuevo_tamano, Image.Resampling.LANCZOS)
 
             self.logo = ImageTk.PhotoImage(logo_redimensionado)
-            label_imagen = tk.Label(self, image=self.logo)
+            label_imagen = tk.Label(self, image=self.logo, bg="white")
             label_imagen.pack(side="top", pady=10)
 
         except Exception as e:
             print(f"Error al cargar imagen: {e}")
             tk.Label(self, text="[Logo no encontrado]", fg="gray").pack(pady=20)
 
-        tk.Label(self, text="RUT:", font=("Arial", 10)).pack(padx=10, pady=(15, 5))
+        tk.Label(self, text="RUT:", font=("Arial", 10), bg="white").pack(padx=10, pady=(15, 5))
         
         self.entrada_rut = tk.Entry(self, width=15)
         self.entrada_rut.pack(padx=5, pady=10)
 
-        tk.Label(self, text="Contraseña:", font=("Arial", 10)).pack(padx=10, pady=(15, 5))
+        tk.Label(self, text="Contraseña:", font=("Arial", 10), bg="white").pack(padx=10, pady=(15, 5))
 
         self.entrada_contrasena = tk.Entry(self, width=15, show="*")
         self.entrada_contrasena.pack(padx=5, pady=10)

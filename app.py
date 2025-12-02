@@ -1,6 +1,7 @@
 import tkinter as tk
 from views.login import Iniciar_sesion
 from views.ventas import Vista_ventas
+from views.menu_admin import Vista_admin
 
 class App(tk.Tk):
     def __init__(self):
@@ -30,8 +31,7 @@ class App(tk.Tk):
 
         # Lógica de roles.
         if rol_id == 1:
-            #Vista_admin(self)
-            pass
+            Vista_admin(self)
         elif rol_id == 2:
             Vista_ventas(self, rut)
         elif rol_id == 3:

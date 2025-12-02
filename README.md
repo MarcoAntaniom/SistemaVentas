@@ -63,3 +63,7 @@ Proyecto de Funciones y Matrices
 
 #### Marco Milanca
 - Se modifica el código que crea el PDF de boleta/factura, ahora si es una factura desglosa el total para mostrarlo en el PDF.
+
+### 2 De Diciembre 2025
+#### Marco Milanca
+- Se crea el menú del admin, se deja solo visual, nada funcional aún.
