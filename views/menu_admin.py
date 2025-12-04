@@ -1,6 +1,7 @@
 import tkinter as tk
 from views.usuarios import Vista_usuarios
 
+
 class Vista_admin(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
@@ -30,9 +31,11 @@ class Vista_admin(tk.Frame):
         # Botones de navegación que cargan las clases.
         self.btn_nav("Usuarios", lambda: self.cambiar_vista(Vista_usuarios))
 
+        self.btn_nav("Productos", lambda: self.cambiar_vista(Vista_productos))
+
+        self.btn_nav("Proveedores", lambda: self.cambiar_vista(Vista_proveedores))
         # Espaciador.
         tk.Frame(self.sidebar, bg=self.bg_sidebar).pack(expand=True)
-        
         btn_salir = tk.Button(self.sidebar, text="Cerrar Sesión", bg="#c0392b", fg="white",
                               font=self.font_btn, bd=0, pady=10, cursor="hand2",
                               command=self.parent.cerrar_sesion)
@@ -58,4 +61,4 @@ class Vista_admin(tk.Frame):
 
         tk.Label(self.content_area, text="Bienvenido al Panel de Control", 
                  font=("Arial", 24, "bold"), fg="#bdc3c7", bg="#ecf0f1").pack(expand=True)
-        
+
