@@ -67,3 +67,8 @@ Proyecto de Funciones y Matrices
 ### 2 De Diciembre 2025
 #### Marco Milanca
 - Se crea el menú del admin, se deja solo visual, nada funcional aún.
+
+
+### 3 De Diciembre 2025
+#### Juaquin Álvarez
+- Se deja funcional la vista de usuarios y sus funciones de creacion actualización y deshabilitación de usuarios en el menu del admin.

@@ -2,6 +2,7 @@ import tkinter as tk
 from views.login import Iniciar_sesion
 from views.ventas import Vista_ventas
 from views.menu_admin import Vista_admin
+from views.usuarios import Vista_usuarios
 
 class App(tk.Tk):
     def __init__(self):
@@ -12,7 +13,7 @@ class App(tk.Tk):
         self.title("Sistema Gestión de Ventas - MiniYa!")
         self.geometry("950x650")
 
-        self.mostrar_login()
+        self.adm()
 
     # Limpia la ventana.
     def limpiar_ventana(self):
@@ -42,3 +43,8 @@ class App(tk.Tk):
 
     def cerrar_sesion(self):
         self.mostrar_login()
+
+    def adm(self):
+        self.limpiar_ventana()
+        self.geometry("980x890")
+        Vista_admin(self)
